@@ -8,14 +8,14 @@ const clientId = 'c2058c9f1da44bb796b2071144e5a4ff';
 const responseType = 'token';
 const redirectUri = 'http://localhost:3000/';
 const scope = 'playlist-modify-public';
-let userAccessToken = '';
+let accessToken = '';
 const authorizationUrl = `${url}?client_id=${clientId}&response_type=${responseType}&scope=${scope}&redirect_uri=${redirectUri}`;
 
 
 const Spotify = {
     getAccessToken() {
-        if(userAccessToken)
-          return userAccessToken;
+        if(accessToken)
+          return accessToken;
         else if(window.location.href.match(/access_token=([^&]*)/) && window.location.href.match(/expires_in=([^&]*)/)) {
           let accessToken = window.location.href.match(/access_token=([^&]*)/)[1];
           let expiresIn = window.location.href.match(/expires_in=([^&]*)/)[1];
@@ -36,7 +36,7 @@ const Spotify = {
             console.log('No access token');
             return [];
         }
-        return fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,album,track`, {
+        return fetch(`https://api.spotify.com/v1/search?q=${searchTerm}&type=artist,track`, {
             headers: 
                 {Authorization: `Bearer ${accessToken}`}
         }).then(
@@ -46,12 +46,12 @@ const Spotify = {
         ).then(
             (jsonResponse) => {
                 if(jsonResponse.tracks) {
-                    return jsonResponse.tracks.map((track) => (
+                    return jsonResponse.tracks.items.map(track => (
                          {
                             id: track.id,                            
                             name: track.name,
-                            artist: track.artist,
-                            album: track.album,
+                            artist: track.artists[0].name,
+                            album: track.album.name,
                             uri: track.uri
                         }
                     ))

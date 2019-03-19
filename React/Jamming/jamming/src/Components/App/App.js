@@ -12,7 +12,7 @@ class App extends React.Component {
     this.state = {
       searchResults: [],
       playlistTracks: [],
-      playlistName: 'Best Oldies'
+      playlistName: ''
     }
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -25,9 +25,9 @@ class App extends React.Component {
     if (this.state.playlistTracks.find(savedTrack =>
       savedTrack.id === track.id)) {
         return;
-      } else {
-        this.state.playlistTracks.push(track);
-      }
+      } 
+      let newPlaylistTracks = this.state.playlistTracks.concat(track);
+    this.setState({playlistTracks: newPlaylistTracks});
   }
 
   removeTrack(track) {
