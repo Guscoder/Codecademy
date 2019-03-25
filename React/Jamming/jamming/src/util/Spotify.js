@@ -63,7 +63,7 @@ const Spotify = {
     },
 
     savePlaylist(playlistName, trackUris){
-        if(!playlistName || !trackUris){
+        if(!playlistName || !trackUris.length){
             return;
         }
         const accessToken = Spotify.getAccessToken();
@@ -72,7 +72,8 @@ const Spotify = {
         };
         let userId;
 
-        return fetch('https://api.spotify.com/v1/me', headers
+
+        return fetch('https://api.spotify.com/v1/me', {headers: headers}
         ).then(response => {
             if (response.ok) {
               return response.json()
